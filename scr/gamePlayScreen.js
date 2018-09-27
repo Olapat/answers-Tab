@@ -1,14 +1,18 @@
 //V.4.2 edit lv function from V.4
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { StyleSheet, Text } from 'react-native';
 import { Container } from 'native-base';
-import { Button } from 'react-native-elements'
 import NineButtons from './Components/_9_buttons';
+import Questions from './question';
+import Answers from './answers';
 
 const timer = require('react-native-timer');
-export default class gamePlayScreen extends Component {
+export default class gamePlayScreen extends PureComponent {
+    static navigationOptions = {
+        header: null,
+    };
     constructor() {
-        super(...arguments);
+        super();
         this.state = {
             sum: 0,
             lv: 1500,
@@ -18,6 +22,7 @@ export default class gamePlayScreen extends Component {
             hp: 3,
             start: false,
             disable_button: true,
+            displayQuestion: false,
             resultAnswerInButton: {
                 resultButton1: null,
                 resultButton2: null,
@@ -29,8 +34,8 @@ export default class gamePlayScreen extends Component {
                 resultButton8: null,
                 resultButton9: null,
             },
-            question: ["2 + 4 = ?", "5 + 5 = ?", "8 x 2 = ?", "4 / 2 = ?", "5 % 0 = ?", "สีชมพูวันอะไร ?", "pig แปลว่า ?"],
-            answer: [6, 10, 16, 2, 0, "อังคาร", "หมู", " ", 66, "พริก", "เขียว", "จันทร์"],
+            question: Questions,
+            answer: Answers,
             IndexRandomStateQuestion: [],
             keyArrayQuestionRandom: 0,
             countDown: 60
@@ -38,11 +43,17 @@ export default class gamePlayScreen extends Component {
     };
 
     componentWillMount() {
-        this._randomResInButton();
+        timer.setTimeout(this, 'delay' ,
+            ()=> {
+            this._onPressButtonStart();
+            this._randomResInButton();
+            }
+            ,1000);
     }
 
     componentWillUnmount() {
         timer.clearInterval(this);
+        timer.clearTimeout(this);
     };
 
     _randomResInButton = () => {
@@ -115,17 +126,9 @@ export default class gamePlayScreen extends Component {
         let st = this.state;
         let timeX10 = time * 10;
         let HP = st.hp * 100;
-        let Point = (st.sum + HP) * time;
-        alert(`
-            Point                   ${st.sum} 
-                                            + 
-            HP (HP x 100)           ${st.hp} (${HP})
-                                            x 
-            Time left (Time left x 10 ) ${time} (${timeX10}) 
-                                            = 
-            Sum point               ${Point}
-            `
-        );
+        timeX10 === 0 ? timeX10 = 1 : null;
+        let Point = (st.sum + HP) * timeX10;
+        this.props.navigation.navigate('GetStartScreen', {Point: Point})
     };
 
     _stop = () => {
@@ -157,10 +160,10 @@ export default class gamePlayScreen extends Component {
 
     _randomQuestion = (keyArrayQuestionRandom, start) => {
         let {IndexRandomStateQuestion, question} = this.state;
-        this.IndexDisplayQuestion = IndexRandomStateQuestion[keyArrayQuestionRandom];
-        let QuestionDisplay = question[this.IndexDisplayQuestion];
-        if (!QuestionDisplay && start) {
-            this._stop();
+            this.IndexDisplayQuestion = IndexRandomStateQuestion[keyArrayQuestionRandom];
+            let QuestionDisplay = question[this.IndexDisplayQuestion];
+            if (!QuestionDisplay && start) {
+                this._stop();
         }
         return <Text style={styles.textQuestion}>{start ? question[this.IndexDisplayQuestion] : ""}</Text>
     };
@@ -194,7 +197,8 @@ export default class gamePlayScreen extends Component {
         }
         let IndexRandomQuestion = shuffleIndexQuestion(arrayIndexQuestion);
         this.setState({
-            IndexRandomStateQuestion: IndexRandomQuestion
+            IndexRandomStateQuestion: IndexRandomQuestion,
+            displayQuestion: true
         })
     };
 
@@ -207,8 +211,6 @@ export default class gamePlayScreen extends Component {
         this.setState({
             start: true,
             disable_button: false,
-            sum: 0,
-            countDown: 60
         });
         this._CreateIndexQuestionRandom();
     };
@@ -221,7 +223,7 @@ export default class gamePlayScreen extends Component {
 
         return (
             <Container>
-                {this._randomQuestion(st.keyArrayQuestionRandom, st.start)}
+                {st.displayQuestion ? this._randomQuestion(st.keyArrayQuestionRandom, st.start) : null}
                 <NineButtons
                     title1={st.start ? st.resultButton1 : ""}
                     onPress1={() => {this._renderOnPressButton(st.resultButton1);}}
@@ -245,12 +247,7 @@ export default class gamePlayScreen extends Component {
                 />
                 <Text style={styles.textPoint}>{st.sum}</Text>
                 <Text style={styles.textPoint}>{st.hp}</Text>
-                <Text style={styles.textPoint}>{st.start ? st.countDown : ""}</Text>
-                <Button
-                    title={'clear'} onPress={() => {timer.clearInterval(this);}}/>
-                <Button title={'start'} onPress={this._onPressButtonStart}
-                />
-                <Button title={"testTimer"} onPress={()=> this.props.navigation.navigate('TestTimers')}/>
+                <Text style={styles.textPoint}>{st.start ? st.countDown : null}</Text>
             </Container>
         );
     }
@@ -268,3 +265,4 @@ const styles = StyleSheet.create({
         fontSize: 30
     }
 });
+
