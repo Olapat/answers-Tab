@@ -13,7 +13,7 @@ export default class homeScreen extends Component {
         return(
             <Container>
                 <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-                    {Point ? <Text style={styles.textPoint}>{`คะแนน\n${Point}`}</Text> : null}
+                    {Point || Point === 0 ? <Text style={styles.textPoint}>{`คะแนน\n${Point}`}</Text> : null}
                     <Button
                         style={styles.buttonStart}
                         color={'red'}
