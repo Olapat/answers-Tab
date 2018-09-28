@@ -1,6 +1,6 @@
 //V.5 edit RandomAnswer from V.4
 import React, {PureComponent} from 'react';
-import {StyleSheet, Text} from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import {Container} from 'native-base';
 import NineButtons from './Components/_9_buttons';
 import Questions from './question';
@@ -195,7 +195,7 @@ export default class gamePlayScreen extends PureComponent {
         if (!QuestionDisplay && start) {
             this._stop();
         }
-        return <Text style={styles.textQuestion}>{start ? QuestionDisplay : ""}</Text>
+        return<View style={{backgroundColor: '#502701'}}><Text style={styles.textQuestion}>{start ? question[this.IndexDisplayQuestion] : ""}</Text></View>
     };
 
     _CreateIndexQuestionRandom = () => {
@@ -259,7 +259,8 @@ export default class gamePlayScreen extends PureComponent {
         this._hp(st.hp);
 
         return (
-            <Container>
+            <Container style={{backgroundColor: '#ad7a56'}}>
+                <Text style={{fontSize: 48, textAlign: 'center', color: '#502701', fontWeight: 'bold'}}>Quiz Game</Text>
                 {st.displayQuestion ? this._randomQuestion(st.keyArrayQuestionRandom, st.start) : null}
                 <NineButtons
                     title1={st.start ? st.resultButton1 : ""}
@@ -300,24 +301,39 @@ export default class gamePlayScreen extends PureComponent {
                     }}
                     disable_={st.disable_button}
                 />
-                <Text style={styles.textPoint}>{st.sum}</Text>
-                <Text style={styles.textPoint}>{st.hp}</Text>
-                <Text style={styles.textPoint}>{st.start ? st.countDown : null}</Text>
+                <View style={{flexDirection: 'row', alignSelf: 'center'}}>
+                    <Text style={styles.textPoint}>Score: </Text>
+                    <Text style={styles.textResult}>{st.sum}</Text>
+                </View>
+                <View style={{flexDirection: 'row', alignSelf: 'center'}}>
+                    <Text style={styles.textPoint}>Hp: </Text>
+                    <Text style={styles.textResult}>{st.hp}</Text>
+                </View>
+                <View style={{flexDirection: 'row', alignSelf: 'center'}}>
+                    <Text style={styles.textPoint}>Time out: </Text>
+                    <Text style={styles.textResult}>{st.start ? st.countDown : null}</Text>
+                </View>
             </Container>
         );
     }
 }
 
 const styles = StyleSheet.create({
-    textQuestion: {
-        color: 'red',
-        fontSize: 30,
-        alignSelf: 'center'
+    textQuestion : {
+        color: '#ad7a56',
+        fontSize: 36,
+        alignSelf: 'center',
+        paddingTop: 5,
+        paddingBottom: 5
     },
     textPoint: {
-        color: '#000',
-        textAlign: 'center',
-        fontSize: 30
-    }
+        color: '#502701',
+        fontSize: 30,
+        fontWeight: 'bold'
+    },
+    textResult: {
+        color: '#fff',
+        fontSize: 30,
+        fontWeight: 'bold'
+    },
 });
-

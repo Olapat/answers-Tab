@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
-import {View, Text, Button, StyleSheet} from 'react-native';
-import {Container} from 'native-base';
+import { StyleSheet, View, Button, TouchableHighlight, Text, Image } from 'react-native';
+import { Container } from 'native-base';
 
 export default class homeScreen extends Component {
     static navigationOptions = {
@@ -11,15 +11,23 @@ export default class homeScreen extends Component {
     render() {
         let Point = this.props.navigation.getParam('Point');
         return(
-            <Container>
-                <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-                    {Point ? <Text style={styles.textPoint}>{`คะแนน\n${Point}`}</Text> : null}
-                    <Button
-                        style={styles.buttonStart}
-                        color={'red'}
-                        onPress={()=> this.props.navigation.navigate('GamePlayScreen')}
-                        title={'Start'}
-                    />
+            <Container style={{flex: 1, backgroundColor: '#ad7a56', alignItems: 'center'}}>
+                <Text style={styles.textTitleQuiz}>Quiz Game</Text>
+                <Image
+                    style={{width: 200, height: 200, alignSelf: 'center'}}
+                    source={require('../pubplic/img/quiz.png')}
+                />
+                <View>
+                    <TouchableHighlight
+                    style={styles.touchPlay}
+                    onPress={()=> this.props.navigation.navigate('GamePlayScreen')}
+                    >
+                    <Text style={styles.textTouch}>Start Game</Text>
+                    </TouchableHighlight>
+                    <View style={{flexDirection: 'row', alignSelf: 'center'}}>
+                        {Point ? <Text style={styles.textTouch}>Score: </Text> : null}
+                        {Point ? <Text style={styles.textTouch}>{Point}</Text> : null}
+                    </View>
                 </View>
             </Container>
         );
@@ -27,15 +35,26 @@ export default class homeScreen extends Component {
 }
 
 const styles = StyleSheet.create({
-    buttonStart : {
-        width: 100,
-        height: 100,
-        color: '#fff'
+    touchPlay: {
+        color: '#fff',
+        backgroundColor: '#502701',
+        paddingLeft: '10%',
+        paddingRight: '10%',
+        borderWidth: 2,
+        borderRadius: 20,
+        borderColor: '#000000',
+        margin: '15%'
     },
-    textPoint: {
-        color: '#000',
-        textAlign: 'center',
-        fontSize: 30
-    }
+    textTouch: {
+        fontSize: 36,
+        fontWeight: 'bold',
+        color: '#fff',
+    },
+    textTitleQuiz: {
+        fontSize: 36,
+        fontWeight: 'bold',
+        color: '#502701',
+        margin: '10%'
+    },
 });
 
