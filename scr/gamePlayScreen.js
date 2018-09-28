@@ -20,7 +20,7 @@ export default class gamePlayScreen extends PureComponent {
             lv1: 30,
             lv2: 50,
             lv3: 70,
-            hp: 3,
+            hp: 10,
             start: false,
             disable_button: true,
             displayQuestion: false,
@@ -57,6 +57,7 @@ export default class gamePlayScreen extends PureComponent {
     componentWillUnmount() {
         timer.clearInterval(this);
         timer.clearTimeout(this);
+        alert(this.state.keyArrayQuestionRandom)
     };
 
     _randomAnswers = () => {
@@ -183,7 +184,7 @@ export default class gamePlayScreen extends PureComponent {
         if (hp === 0) {
             this._stop();
             this.setState({
-                hp: 3
+                hp: 10
             });
         }
     };
@@ -261,6 +262,7 @@ export default class gamePlayScreen extends PureComponent {
         return (
             <Container style={{backgroundColor: '#ad7a56'}}>
                 <Text style={{fontSize: 48, textAlign: 'center', color: '#502701', fontWeight: 'bold'}}>Quiz Game</Text>
+                <Text style={{fontSize: 30, textAlign: 'center', color: '#502701', fontWeight: 'bold'}}>{this.state.keyArrayQuestionRandom}</Text>
                 {st.displayQuestion ? this._randomQuestion(st.keyArrayQuestionRandom, st.start) : null}
                 <NineButtons
                     title1={st.start ? st.resultButton1 : ""}
