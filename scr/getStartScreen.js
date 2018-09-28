@@ -26,7 +26,7 @@ export default class homeScreen extends Component {
                     </TouchableHighlight>
                     <View style={{flexDirection: 'row', alignSelf: 'center'}}>
                         {Point ? <Text style={styles.textTouch}>Score: </Text> : null}
-                        {Point ? <Text style={styles.textTouch}>{Point}</Text> : null}
+                        {Point || Point === 0 ? <Text style={styles.textTouch}>{Point}</Text> : null}
                     </View>
                 </View>
             </Container>
@@ -36,7 +36,6 @@ export default class homeScreen extends Component {
 
 const styles = StyleSheet.create({
     touchPlay: {
-        color: '#fff',
         backgroundColor: '#502701',
         paddingLeft: '10%',
         paddingRight: '10%',

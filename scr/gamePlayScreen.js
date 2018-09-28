@@ -42,6 +42,8 @@ export default class gamePlayScreen extends PureComponent {
             IndexRandomStateAnswers:[],
             keyArrayQuestionRandom: 0,
             countDown: 60,
+            bgColorRightful: "transparent",
+            bgColorHp: "transparent"
         };
     };
 
@@ -51,13 +53,12 @@ export default class gamePlayScreen extends PureComponent {
                 this._CreateIndexQuestionRandom();
                 this._randomAnswerInButton();
             }
-            , 500);
+            , 200);
     };
 
     componentWillUnmount() {
         timer.clearInterval(this);
         timer.clearTimeout(this);
-        alert(this.state.keyArrayQuestionRandom)
     };
 
     _randomAnswers = () => {
@@ -110,21 +111,31 @@ export default class gamePlayScreen extends PureComponent {
 
     };
 
+    _resetBgColor = () => {
+        timer.setTimeout(this, 'resetBg', () => {
+            this.setState({
+                bgColorRightful: "transparent",
+                bgColorHp : 'transparent'
+            })
+        },200);
+    };
+
     _checkAnswer = (ans) => {
         let {answer, sum, hp} = this.state;
         this.answerRightful = answer[this.IndexDisplayQuestion];
         if (ans === this.answerRightful) {
             this.setState({
                 sum: sum + 10,
-                keyArrayQuestionRandom: this.state.keyArrayQuestionRandom + 1
+                keyArrayQuestionRandom: this.state.keyArrayQuestionRandom + 1,
+                bgColorRightful: "green"
             });
         } else {
             this.setState({
                 hp: hp - 1,
+                bgColorHp : 'red'
             });
         }
-        ans = "";
-        return ans;
+        this._resetBgColor()
     };
 
     _lv = () => {
@@ -158,7 +169,7 @@ export default class gamePlayScreen extends PureComponent {
         let timeX10 = time * 10;
         let HP = st.hp * 100;
         timeX10 === 0 ? timeX10 = 1 : null;
-        let Point = (st.sum + HP) * timeX10;
+        let Point = st.sum === 0 ? 0 : (st.sum + timeX10) * HP;
         this.props.navigation.navigate('GetStartScreen', {Point: Point})
     };
 
@@ -196,7 +207,8 @@ export default class gamePlayScreen extends PureComponent {
         if (!QuestionDisplay && start) {
             this._stop();
         }
-        return<View style={{backgroundColor: '#502701'}}><Text style={styles.textQuestion}>{start ? question[this.IndexDisplayQuestion] : ""}</Text></View>
+        let fontSize = QuestionDisplay.length > 20 ? 30 : 36;
+        return <Text style={[styles.textQuestion, {fontSize: fontSize}]}>{start ? QuestionDisplay : " "}</Text>
     };
 
     _CreateIndexQuestionRandom = () => {
@@ -261,9 +273,19 @@ export default class gamePlayScreen extends PureComponent {
 
         return (
             <Container style={{backgroundColor: '#ad7a56'}}>
-                <Text style={{fontSize: 48, textAlign: 'center', color: '#502701', fontWeight: 'bold'}}>Quiz Game</Text>
-                <Text style={{fontSize: 30, textAlign: 'center', color: '#502701', fontWeight: 'bold'}}>{this.state.keyArrayQuestionRandom}</Text>
-                {st.displayQuestion ? this._randomQuestion(st.keyArrayQuestionRandom, st.start) : null}
+                <View style={{flexDirection: 'row', width: '100%', height: '10%', justifyContent: 'space-between', paddingHorizontal: '3%', alignItems: 'center'}}>
+                    <View style={{flexDirection: 'row', backgroundColor: this.state.bgColorHp}}>
+                        <Text style={styles.textPoint}>Hp: </Text>
+                        <Text style={styles.textResult}>{st.hp}</Text>
+                    </View>
+                    <View style={{flexDirection: 'row', alignSelf: 'center'}}>
+                        <Text style={styles.textPoint}>Time out: </Text>
+                        <Text style={styles.textResult}>{st.countDown}</Text>
+                    </View>
+                </View>
+                <View style={{backgroundColor: '#502701', width: '100%', height: '10%', alignItems: 'center', marginBottom: 20}}>
+                    {st.displayQuestion ? this._randomQuestion(st.keyArrayQuestionRandom, st.start) : null}
+                </View>
                 <NineButtons
                     title1={st.start ? st.resultButton1 : ""}
                     onPress1={(key) => {
@@ -303,17 +325,9 @@ export default class gamePlayScreen extends PureComponent {
                     }}
                     disable_={st.disable_button}
                 />
-                <View style={{flexDirection: 'row', alignSelf: 'center'}}>
+                <View style={{flexDirection: 'row', justifyContent: 'center', alignItems: 'center', width: "100%", backgroundColor: this.state.bgColorRightful}}>
                     <Text style={styles.textPoint}>Score: </Text>
                     <Text style={styles.textResult}>{st.sum}</Text>
-                </View>
-                <View style={{flexDirection: 'row', alignSelf: 'center'}}>
-                    <Text style={styles.textPoint}>Hp: </Text>
-                    <Text style={styles.textResult}>{st.hp}</Text>
-                </View>
-                <View style={{flexDirection: 'row', alignSelf: 'center'}}>
-                    <Text style={styles.textPoint}>Time out: </Text>
-                    <Text style={styles.textResult}>{st.start ? st.countDown : null}</Text>
                 </View>
             </Container>
         );
@@ -322,11 +336,11 @@ export default class gamePlayScreen extends PureComponent {
 
 const styles = StyleSheet.create({
     textQuestion : {
-        color: '#ad7a56',
-        fontSize: 36,
-        alignSelf: 'center',
+        color: '#ffa58b',
+        textAlign: 'center',
         paddingTop: 5,
-        paddingBottom: 5
+        paddingBottom: 5,
+        fontWeight: 'bold',
     },
     textPoint: {
         color: '#502701',
