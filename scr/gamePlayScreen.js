@@ -16,7 +16,7 @@ export default class gamePlayScreen extends PureComponent {
         super(props);
         this.state = {
             sum: 0,
-            lv: 5000,
+            lv: 1500,
             lv1: 30,
             lv2: 50,
             lv3: 70,
@@ -57,71 +57,6 @@ export default class gamePlayScreen extends PureComponent {
     componentWillUnmount() {
         timer.clearInterval(this);
         timer.clearTimeout(this);
-    };
-
-    _CreateIndexAnswersRandom = () => {
-        let {answer} = this.state;
-        let arrayIndexAnswers = [];
-        let IndexLength = answer.length - 1;
-        this.shareArray = [];
-        function pushNumberArray(share) {  // [11, 5, 11, 5, ....., n]
-            let IndexHalf = Math.floor(IndexLength / share);
-            let Index = 0;
-            for (let i = 9; i > 0; i--){
-                if (Index % share === 0) {
-                    arrayIndexAnswers.push(IndexLength);
-                }else {
-                    arrayIndexAnswers.push(IndexHalf);
-                }
-                Index++;
-            }
-            return arrayIndexAnswers;
-        }
-
-        function mod (Index) {
-            let mod = 0;
-            let ii,
-                ss,
-                arrayss = [];
-            for (let i = 3; i < (Index / 2); i++) {
-                if (Index % i === 0) {
-                    mod = i;
-                    break;
-                }
-            }
-
-            ii = Index / mod;
-
-            for (let i = 1; i <= mod; i++) {
-                ss = ii * i;
-                arrayss.push(ss)
-            }
-
-            return arrayss;
-        }
-
-        this.shareArray = mod(IndexLength);
-
-        arrayIndexAnswers = pushNumberArray(2);
-
-        function shuffleIndexQuestion(arrayIndexAnswers) {  // [5, 11, 11, 5, ....., n]
-            let IndexQuestion = arrayIndexAnswers.length,
-                shuffleIndex = 0,
-                valueTemporary;
-
-            while (IndexQuestion--) {
-                shuffleIndex = Math.floor(Math.random() * (IndexQuestion + 1));
-                valueTemporary = arrayIndexAnswers[IndexQuestion];
-                arrayIndexAnswers[IndexQuestion] = arrayIndexAnswers[shuffleIndex];
-                arrayIndexAnswers[shuffleIndex] = valueTemporary;
-            }
-            return arrayIndexAnswers;
-        }
-
-        let IndexRandomAnswers = shuffleIndexQuestion(this.shareArray);
-        this.setState({
-            IndexRandomStateAnswers: IndexRandomAnswers,
-        });
     };
 
     _randomAnswers = () => {
