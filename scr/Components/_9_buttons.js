@@ -10,51 +10,51 @@ class _9_buttons extends React.Component {
                 <View style={{flexDirection: "row", marginBottom: 10}}>
                     <Button
                         title={this.props.title1}
-                        onPress={this.props.onPress1}
+                        onPress={()=> this.props.onPress1(1)}
                         disable={this.props.disable_}
                     />
                     <Button
                         title={this.props.title2}
-                        onPress={this.props.onPress2}
+                        onPress={()=> this.props.onPress2(2)}
                         disable={this.props.disable_}
                     />
                     <Button
                         title={this.props.title3}
-                        onPress={this.props.onPress3}
+                        onPress={()=> this.props.onPress3(3)}
                         disable={this.props.disable_}
                     />
                 </View>
                 <View style={{flexDirection: "row", marginBottom: 10}}>
                     <Button
                         title={this.props.title4}
-                        onPress={this.props.onPress4}
+                        onPress={()=> this.props.onPress4(4)}
                         disable={this.props.disable_}
                     />
                     <Button
                         title={this.props.title5}
-                        onPress={this.props.onPress5}
+                        onPress={()=> this.props.onPress5(5)}
                         disable={this.props.disable_}
                     />
                     <Button
                         title={this.props.title6}
-                        onPress={this.props.onPress6}
+                        onPress={()=> this.props.onPress6(6)}
                         disable={this.props.disable_}
                     />
                 </View>
                 <View style={{flexDirection: "row", marginBottom: 10}}>
                     <Button
                         title={this.props.title7}
-                        onPress={this.props.onPress7}
+                        onPress={()=> this.props.onPress7(7)}
                         disable={this.props.disable_}
                     />
                     <Button
                         title={this.props.title8}
-                        onPress={this.props.onPress8}
+                        onPress={()=> this.props.onPress8(8)}
                         disable={this.props.disable_}
                     />
                     <Button
                         title={this.props.title9}
-                        onPress={this.props.onPress9}
+                        onPress={()=> this.props.onPress9(9)}
                         disable={this.props.disable_}
                     />
                 </View>
@@ -114,15 +114,15 @@ _9_buttons.propTypes = {
 };
 
 _9_buttons.defaultProps = {
-    title1: "none",
-    title2: "none",
-    title3: "none",
-    title4: "none",
-    title5: "none",
-    title6: "none",
-    title7: "none",
-    title8: "none",
-    title9: "none",
+    title1: "",
+    title2: "",
+    title3: "",
+    title4: "",
+    title5: "",
+    title6: "",
+    title7: "",
+    title8: "",
+    title9: "",
     onPress1: null,
     onPress2: null,
     onPress3: null,
