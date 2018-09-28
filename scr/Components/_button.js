@@ -1,18 +1,17 @@
 import React from 'react';
-import {TouchableOpacity} from 'react-native';
+import {TouchableHighlight, Text} from 'react-native';
 import {Button} from 'react-native-elements';
 import PropTypes from "prop-types";
 
 const _button = (props) => {
     return(
-        <Button
-            raised={true}
-            buttonStyle={{width: 100, height: 100}}
-            disabled={props.disable}
-            fontSize={35} fontWeight={'bold'}
-            title={props.title}
+        <TouchableHighlight
+            style={{width: '30%', height: 110,backgroundColor: '#502701', margin: '1.7%', borderWidth: 2, borderColor: '#000000', borderRadius: 15}}
             onPress={props.onPress}
-        />
+            underlayColor={'#1dc81e'}
+        >
+            <Text style={{fontSize: 36, fontWeight: 'bold', color: '#fff', textAlign: 'center', marginTop: '23%'}}>{props.title}</Text>
+        </TouchableHighlight>
     );
 };
 
