@@ -48,10 +48,10 @@ export default class gamePlayScreen extends PureComponent {
     componentWillMount() {
         timer.setTimeout(this, 'delay',
             () => {
-                this._onPressButtonStart();
+                this._CreateIndexQuestionRandom();
                 this._randomAnswerInButton();
             }
-            , 1000);
+            , 500);
     };
 
     componentWillUnmount() {
@@ -95,6 +95,11 @@ export default class gamePlayScreen extends PureComponent {
                 this._randomAnswers();
             }, st.lv);
         timer.setTimeout(this, 'delayCountDown', () => {
+            this.setState({
+                start: true,
+                disable_button: false,
+                displayQuestion: true
+            });
             timer.setInterval(this, 'countDown', () => {  //countDownTime
                 this.setState({
                     countDown: this.state.countDown - 1,
@@ -114,7 +119,7 @@ export default class gamePlayScreen extends PureComponent {
             });
         } else {
             this.setState({
-                hp: hp + 1,
+                hp: hp - 1,
             });
         }
         ans = "";
@@ -225,7 +230,6 @@ export default class gamePlayScreen extends PureComponent {
         let IndexRandomQuestion = shuffleIndexQuestion(arrayIndexQuestion);
         this.setState({
             IndexRandomStateQuestion: IndexRandomQuestion,
-            displayQuestion: true
         })
     };
 
@@ -247,14 +251,6 @@ export default class gamePlayScreen extends PureComponent {
         this._checkAnswer(ans);
         this._clearAnswerInButtons(key);
         // this._lv();
-    };
-
-    _onPressButtonStart = () => {
-        this.setState({
-            start: true,
-            disable_button: false,
-        });
-        this._CreateIndexQuestionRandom();
     };
 
     render() {
