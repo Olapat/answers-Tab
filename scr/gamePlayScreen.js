@@ -1,7 +1,7 @@
-//V.5 edit RandomAnswer from V.4
-import React, {PureComponent} from 'react';
+//V.5 Update pattern Code
+import React, { PureComponent } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import {Container} from 'native-base';
+import { Container, Content } from 'native-base';
 import NineButtons from './Components/_9_buttons';
 import Questions from './question';
 import Answers from './answers';
@@ -135,33 +135,7 @@ export default class gamePlayScreen extends PureComponent {
                 bgColorHp : 'red'
             });
         }
-        this._resetBgColor()
-    };
-
-    _lv = () => {
-        // Level 1
-        if (this.state.lv1 - this.state.sum === 0) {
-            this.setState({
-                lv: 1200,
-                lv1: this.state.lv1 += 1
-            });
-            return;
-        }
-        // Level 2
-        if (this.state.lv2 - this.state.sum === 0) {
-            this.setState({
-                lv: 1000,
-                lv2: this.state.lv2 += 1
-            });
-            return;
-        }
-        // Level 3
-        if (this.state.lv3 - this.state.sum === 0) {
-            this.setState({
-                lv: 800,
-                lv3: this.state.lv3 += 1
-            });
-        }
+        this._resetBgColor();
     };
 
     _displayPoint = (time) => {
@@ -170,11 +144,11 @@ export default class gamePlayScreen extends PureComponent {
         let HP = st.hp * 100;
         timeX10 === 0 ? timeX10 = 1 : null;
         let Point = st.sum === 0 ? 0 : (st.sum + timeX10) * HP;
-        this.props.navigation.navigate('GetStartScreen', {Point: Point})
+        this.props.navigation.navigate('GetStartScreen', {Point: Point});
     };
 
     _stop = () => {
-        let {countDown} = this.state;
+        let { countDown } = this.state;
         timer.clearInterval(this);
         this._displayPoint(countDown);
         this.setState({
@@ -194,14 +168,12 @@ export default class gamePlayScreen extends PureComponent {
     _hp = (hp) => {
         if (hp === 0) {
             this._stop();
-            this.setState({
-                hp: 10
-            });
+            this.setState({ hp: 10 });
         }
     };
 
     _randomQuestion = (keyArrayQuestionRandom, start) => {
-        let {IndexRandomStateQuestion, question} = this.state;
+        let { IndexRandomStateQuestion, question } = this.state;
         this.IndexDisplayQuestion = IndexRandomStateQuestion[keyArrayQuestionRandom];
         let QuestionDisplay = question[this.IndexDisplayQuestion];
         if (!QuestionDisplay && start) {
@@ -212,7 +184,7 @@ export default class gamePlayScreen extends PureComponent {
     };
 
     _CreateIndexQuestionRandom = () => {
-        let {question} = this.state;
+        let { question } = this.state;
         let arrayIndexQuestion = [];
 
         function pushNumberArray() {  // [1, 2, 3, 4, ....., n]
@@ -241,9 +213,7 @@ export default class gamePlayScreen extends PureComponent {
         }
 
         let IndexRandomQuestion = shuffleIndexQuestion(arrayIndexQuestion);
-        this.setState({
-            IndexRandomStateQuestion: IndexRandomQuestion,
-        })
+        this.setState({ IndexRandomStateQuestion: IndexRandomQuestion })
     };
 
     _clearAnswerInButtons = (key) => {
@@ -263,7 +233,6 @@ export default class gamePlayScreen extends PureComponent {
     _renderOnPressButton = (ans, key) => {
         this._checkAnswer(ans);
         this._clearAnswerInButtons(key);
-        // this._lv();
     };
 
     render() {
@@ -272,18 +241,18 @@ export default class gamePlayScreen extends PureComponent {
         this._hp(st.hp);
 
         return (
-            <Container style={{backgroundColor: '#ad7a56'}}>
-                <View style={{flexDirection: 'row', width: '100%', height: '10%', justifyContent: 'space-between', paddingHorizontal: '3%', alignItems: 'center'}}>
-                    <View style={{flexDirection: 'row', backgroundColor: this.state.bgColorHp}}>
-                        <Text style={styles.textPoint}>Hp: </Text>
+            <Container style={styles.bgContainer}>
+                <View style={styles.viewHeader}>
+                    <View style={[styles.viewHp,{backgroundColor: this.state.bgColorHp}]}>
+                        <Text style={styles.textPoint}>{"Hp: "}</Text>
                         <Text style={styles.textResult}>{st.hp}</Text>
                     </View>
-                    <View style={{flexDirection: 'row', alignSelf: 'center'}}>
-                        <Text style={styles.textPoint}>Time out: </Text>
+                    <View style={styles.viewCountDownTime}>
+                        <Text style={styles.textPoint}>{"Time out: "}</Text>
                         <Text style={styles.textResult}>{st.countDown}</Text>
                     </View>
                 </View>
-                <View style={{backgroundColor: '#502701', width: '100%', height: '10%', alignItems: 'center', marginBottom: 20}}>
+                <View style={styles.viewDisplayQuestion}>
                     {st.displayQuestion ? this._randomQuestion(st.keyArrayQuestionRandom, st.start) : null}
                 </View>
                 <NineButtons
@@ -325,8 +294,8 @@ export default class gamePlayScreen extends PureComponent {
                     }}
                     disable_={st.disable_button}
                 />
-                <View style={{flexDirection: 'row', justifyContent: 'center', alignItems: 'center', width: "100%", backgroundColor: this.state.bgColorRightful}}>
-                    <Text style={styles.textPoint}>Score: </Text>
+                <View style={[styles.viewScore,{backgroundColor: this.state.bgColorRightful}]}>
+                    <Text style={styles.textPoint}>{"Score: "}</Text>
                     <Text style={styles.textResult}>{st.sum}</Text>
                 </View>
             </Container>
@@ -335,6 +304,38 @@ export default class gamePlayScreen extends PureComponent {
 }
 
 const styles = StyleSheet.create({
+    bgContainer: {
+        backgroundColor: '#ad7a56'
+    },
+    viewHeader: {
+        flexDirection: 'row',
+        width: '100%',
+        height: '10%',
+        justifyContent: 'space-between',
+        paddingHorizontal: '3%',
+        alignItems: 'center'
+    },
+    viewHp: {
+        flexDirection: 'row',
+    },
+    viewCountDownTime: {
+        flexDirection: 'row',
+        alignSelf: 'center'
+    },
+    viewDisplayQuestion: {
+        backgroundColor: '#502701',
+        width: '100%',
+        height: '10%',
+        alignItems: 'center',
+        marginBottom: 20
+    },
+    viewScore: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: "100%",
+        height: '10%',
+    },
     textQuestion : {
         color: '#ffa58b',
         textAlign: 'center',
