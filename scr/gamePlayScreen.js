@@ -51,6 +51,7 @@ export default class gamePlayScreen extends PureComponent {
         timer.setTimeout(this, 'delay',
             () => {
                 this._CreateIndexQuestionRandom();
+                this._randomQuestion(this.state.keyArrayQuestionRandom, this.state.start);
                 this._randomAnswerInButton();
             }
             , 200);
@@ -166,10 +167,7 @@ export default class gamePlayScreen extends PureComponent {
 
     _displayPoint = (time) => {
         let st = this.state;
-        let timeX10 = time * 10;
-        let HP = st.hp * 100;
-        timeX10 === 0 ? timeX10 = 1 : null;
-        let Point = st.sum === 0 ? 0 : (st.sum + timeX10) * HP;
+        let Point = (time + st.hp) * st.sum;
         this.props.navigation.navigate('GetStartScreen', {Point: Point})
     };
 
@@ -198,16 +196,19 @@ export default class gamePlayScreen extends PureComponent {
                 hp: 10
             });
         }
+
     };
 
     _randomQuestion = (keyArrayQuestionRandom, start) => {
         let {IndexRandomStateQuestion, question} = this.state;
         this.IndexDisplayQuestion = IndexRandomStateQuestion[keyArrayQuestionRandom];
         let QuestionDisplay = question[this.IndexDisplayQuestion];
+        let fontSize = 36;
         if (!QuestionDisplay && start) {
             this._stop();
+        }else if (QuestionDisplay) {
+            fontSize = QuestionDisplay.length > 20 ? 30 : 36;
         }
-        let fontSize = QuestionDisplay.length > 20 ? 30 : 36;
         return <Text style={[styles.textQuestion, {fontSize: fontSize}]}>{start ? QuestionDisplay : " "}</Text>
     };
 
@@ -223,7 +224,6 @@ export default class gamePlayScreen extends PureComponent {
             });
             return arrayIndexQuestion;
         }
-
         arrayIndexQuestion = pushNumberArray();
 
         function shuffleIndexQuestion(arrayIndexQuestion) {  // [5, 7, 8, 3, ....., n]
@@ -243,7 +243,7 @@ export default class gamePlayScreen extends PureComponent {
         let IndexRandomQuestion = shuffleIndexQuestion(arrayIndexQuestion);
         this.setState({
             IndexRandomStateQuestion: IndexRandomQuestion,
-        })
+        });
     };
 
     _clearAnswerInButtons = (key) => {
