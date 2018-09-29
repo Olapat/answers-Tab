@@ -12,7 +12,7 @@ export default class homeScreen extends Component {
         let Point = this.props.navigation.getParam('Point');
         return(
             <Container style={{flex: 1, backgroundColor: '#ad7a56', alignItems: 'center'}}>
-                <Text style={styles.textTitleQuiz}>Quiz Game</Text>
+                <Text style={styles.textTitleQuiz}>{"Asnwers Tab"}</Text>
                 <Image
                     style={{width: 200, height: 200, alignSelf: 'center'}}
                     source={require('../pubplic/img/quiz.png')}
@@ -22,7 +22,7 @@ export default class homeScreen extends Component {
                     style={styles.touchPlay}
                     onPress={()=> this.props.navigation.navigate('GamePlayScreen')}
                     >
-                    <Text style={styles.textTouch}>Start Game</Text>
+                    <Text style={styles.textTouch}>{"Start Game"}</Text>
                     </TouchableHighlight>
                     <View style={{flexDirection: 'row', alignSelf: 'center'}}>
                         {Point ? <Text style={styles.textTouch}>Score: </Text> : null}
