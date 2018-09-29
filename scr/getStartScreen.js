@@ -1,32 +1,33 @@
 import React, {Component} from 'react';
-import { StyleSheet, View, Button, TouchableHighlight, Text, Image } from 'react-native';
-import { Container } from 'native-base';
+import { StyleSheet, View, TouchableHighlight, Text, Image } from 'react-native';
+import { Container, Content } from 'native-base';
 
 export default class homeScreen extends Component {
     static navigationOptions = {
-      header: null,
-        drawerLabel: 'GetStart'
+        header: null
     };
 
     render() {
-        let Point = this.props.navigation.getParam('Point');
+        let ScoreTotal = this.props.navigation.getParam('Point');
         return(
-            <Container style={{flex: 1, backgroundColor: '#ad7a56', alignItems: 'center'}}>
+            <Container style={styles.container}>
                 <Text style={styles.textTitleQuiz}>{"Asnwers Tab"}</Text>
                 <Image
-                    style={{width: 200, height: 200, alignSelf: 'center'}}
-                    source={require('../pubplic/img/quiz.png')}
+                    style={styles.image}
+                    source={require('../public/img/quiz.png')}
                 />
                 <View>
                     <TouchableHighlight
-                    style={styles.touchPlay}
-                    onPress={()=> this.props.navigation.navigate('GamePlayScreen')}
+                        style={styles.touchPlay}
+                        onPress={()=> this.props.navigation.navigate('GamePlayScreen')}
                     >
-                    <Text style={styles.textTouch}>{"Start Game"}</Text>
+                        <Text style={styles.text}>{"Start Game"}</Text>
                     </TouchableHighlight>
-                    <View style={{flexDirection: 'row', alignSelf: 'center'}}>
-                        {Point ? <Text style={styles.textTouch}>Score: </Text> : null}
-                        {Point || Point === 0 ? <Text style={styles.textTouch}>{Point}</Text> : null}
+                    <View style={styles.viewScoreTotal}>
+                        {ScoreTotal || ScoreTotal === 0 ?
+                            <Text style={styles.text}>{`Score: ${ScoreTotal}`}</Text>
+                            : null
+                        }
                     </View>
                 </View>
             </Container>
@@ -35,6 +36,17 @@ export default class homeScreen extends Component {
 }
 
 const styles = StyleSheet.create({
+    container:{
+        flex: 1,
+        backgroundColor: '#ad7a56',
+        alignItems: 'center'
+    },
+    image: {
+        width: 200,
+        height: 200,
+        margin: '10%',
+        alignSelf: 'center'
+    },
     touchPlay: {
         backgroundColor: '#502701',
         paddingLeft: '10%',
@@ -42,18 +54,23 @@ const styles = StyleSheet.create({
         borderWidth: 2,
         borderRadius: 20,
         borderColor: '#000000',
-        margin: '15%'
+        margin: '10%'
     },
-    textTouch: {
-        fontSize: 36,
-        fontWeight: 'bold',
-        color: '#fff',
+    viewScoreTotal: {
+        flexDirection: 'row',
+        alignSelf: 'center'
     },
     textTitleQuiz: {
         fontSize: 36,
         fontWeight: 'bold',
         color: '#502701',
-        margin: '10%'
+        margin: '10%',
+        alignSelf: 'center'
+    },
+    text: {
+        fontSize: 36,
+        fontWeight: 'bold',
+        color: '#fff',
     },
 });
 
