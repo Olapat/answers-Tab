@@ -146,7 +146,7 @@ _9_buttons.defaultProps = {
 const styles = StyleSheet.create({
     viewFlexRow: {
         flexDirection: "row",
-        marginBottom: 10
+        marginBottom: "1%"
     }
 });
 

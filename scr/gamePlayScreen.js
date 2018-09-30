@@ -1,4 +1,4 @@
-//V.5 Update pattern Code
+//V.6 Update score , fix bug Code , add DisplayIndexQ and edit pattern function
 import React, { PureComponent } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { Container, Content } from 'native-base';
@@ -15,12 +15,9 @@ export default class gamePlayScreen extends PureComponent {
     constructor(props) {
         super(props);
         this.state = {
-            sum: 0,
-            lv: 1500,
-            lv1: 30,
-            lv2: 50,
-            lv3: 70,
-            hp: 10,
+            score: 0,
+            lv: 2000,
+            hp: 5,
             start: false,
             disable_button: true,
             displayQuestion: false,
@@ -51,6 +48,7 @@ export default class gamePlayScreen extends PureComponent {
         timer.setTimeout(this, 'delay',
             () => {
                 this._CreateIndexQuestionRandom();
+                this._randomQuestion(this.state.keyArrayQuestionRandom, this.state.start);
                 this._randomAnswerInButton();
             }
             , 200);
@@ -59,128 +57,6 @@ export default class gamePlayScreen extends PureComponent {
     componentWillUnmount() {
         timer.clearInterval(this);
         timer.clearTimeout(this);
-    };
-
-    _randomAnswers = () => {
-        let st = this.state;
-        this.answerRightful = st.answer[this.IndexDisplayQuestion];
-        let ranButtonShowAnswerRightful = Math.floor(Math.random() * 9) + 1;
-        this.setState({
-            resultButton1: st.answer[Math.floor(Math.random() * st.answer.length)],
-            resultButton2: st.answer[Math.floor(Math.random() * st.answer.length)],
-            resultButton3: st.answer[Math.floor(Math.random() * st.answer.length)],
-            resultButton4: st.answer[Math.floor(Math.random() * st.answer.length)],
-            resultButton5: st.answer[Math.floor(Math.random() * st.answer.length)],
-            resultButton6: st.answer[Math.floor(Math.random() * st.answer.length)],
-            resultButton7: st.answer[Math.floor(Math.random() * st.answer.length)],
-            resultButton8: st.answer[Math.floor(Math.random() * st.answer.length)],
-            resultButton9: st.answer[Math.floor(Math.random() * st.answer.length)],
-        });
-        switch (ranButtonShowAnswerRightful) {      //ทำให้ในแต่ละรอบมีคำตอบที่ถูกต้องอย่างน้อย 1 เสมอ
-            case 1 : { this.setState({resultButton1: this.answerRightful}) } break;
-            case 2 : { this.setState({resultButton2: this.answerRightful}) } break;
-            case 3 : { this.setState({resultButton3: this.answerRightful}) } break;
-            case 4 : { this.setState({resultButton4: this.answerRightful}) } break;
-            case 5 : { this.setState({resultButton5: this.answerRightful}) } break;
-            case 6 : { this.setState({resultButton6: this.answerRightful}) } break;
-            case 7 : { this.setState({resultButton7: this.answerRightful}) } break;
-            case 8 : { this.setState({resultButton8: this.answerRightful}) } break;
-            case 9 : { this.setState({resultButton9: this.answerRightful}) } break;
-        }
-    };
-
-    _randomAnswerInButton = () => {
-        let st = this.state;
-        timer.setInterval(      // Random As 9 Button
-            this, 'resInButton',
-            () => {
-                this._randomAnswers();
-            }, st.lv);
-        timer.setTimeout(this, 'delayCountDown', () => {
-            this.setState({
-                start: true,
-                disable_button: false,
-                displayQuestion: true
-            });
-            timer.setInterval(this, 'countDown', () => {  //countDownTime
-                this.setState({
-                    countDown: this.state.countDown - 1,
-                });
-            }, 1000)
-        },st.lv);
-
-    };
-
-    _resetBgColor = () => {
-        timer.setTimeout(this, 'resetBg', () => {
-            this.setState({
-                bgColorRightful: "transparent",
-                bgColorHp : 'transparent'
-            })
-        },200);
-    };
-
-    _checkAnswer = (ans) => {
-        let {answer, sum, hp} = this.state;
-        this.answerRightful = answer[this.IndexDisplayQuestion];
-        if (ans === this.answerRightful) {
-            this.setState({
-                sum: sum + 10,
-                keyArrayQuestionRandom: this.state.keyArrayQuestionRandom + 1,
-                bgColorRightful: "green"
-            });
-        } else {
-            this.setState({
-                hp: hp - 1,
-                bgColorHp : 'red'
-            });
-        }
-        this._resetBgColor();
-    };
-
-    _displayPoint = (time) => {
-        let st = this.state;
-        let timeX10 = time * 10;
-        let HP = st.hp * 100;
-        timeX10 === 0 ? timeX10 = 1 : null;
-        let Point = st.sum === 0 ? 0 : (st.sum + timeX10) * HP;
-        this.props.navigation.navigate('GetStartScreen', {Point: Point});
-    };
-
-    _stop = () => {
-        let { countDown } = this.state;
-        timer.clearInterval(this);
-        this._displayPoint(countDown);
-        this.setState({
-            disable_button: true,
-            start: false,
-            countDown: 60
-        });
-
-    };
-
-    _checkTime = () => {
-        if (this.state.countDown === 0) {
-            this._stop();
-        }
-    };
-
-    _hp = (hp) => {
-        if (hp === 0) {
-            this._stop();
-            this.setState({ hp: 10 });
-        }
-    };
-
-    _randomQuestion = (keyArrayQuestionRandom, start) => {
-        let { IndexRandomStateQuestion, question } = this.state;
-        this.IndexDisplayQuestion = IndexRandomStateQuestion[keyArrayQuestionRandom];
-        let QuestionDisplay = question[this.IndexDisplayQuestion];
-        if (!QuestionDisplay && start) {
-            this._stop();
-        }
-        let fontSize = QuestionDisplay.length > 20 ? 30 : 36;
-        return <Text style={[styles.textQuestion, {fontSize: fontSize}]}>{start ? QuestionDisplay : " "}</Text>
     };
 
     _CreateIndexQuestionRandom = () => {
@@ -216,6 +92,100 @@ export default class gamePlayScreen extends PureComponent {
         this.setState({ IndexRandomStateQuestion: IndexRandomQuestion })
     };
 
+    _randomQuestion = (keyArrayQuestionRandom, start) => {
+        let { IndexRandomStateQuestion, question } = this.state;
+        this.IndexDisplayQuestion = IndexRandomStateQuestion[keyArrayQuestionRandom];
+        let QuestionDisplay = question[this.IndexDisplayQuestion];
+        let fontSize = 36;
+        if (!QuestionDisplay && start) {
+            this._stop();
+        }else if (QuestionDisplay) {
+            fontSize = QuestionDisplay.length > 20 ? 30 : 36;
+        }
+        return <Text style={[styles.textQuestion, {fontSize: fontSize}]}>{start ? QuestionDisplay : " "}</Text>
+    };
+
+    _randomAnswerInButton = () => {
+        let st = this.state;
+        timer.setInterval(      // Random As 9 Button
+            this, 'resInButton',
+            () => {
+                this._randomAnswers();
+            }, st.lv);
+        timer.setTimeout(this, 'delayCountDown', () => {
+            this.setState({
+                start: true,
+                disable_button: false,
+                displayQuestion: true
+            });
+            timer.setInterval(this, 'countDown', () => {  //countDownTime
+                this.setState({
+                    countDown: this.state.countDown - 1,
+                });
+            }, 1000)
+        },st.lv);
+    };
+
+    _randomAnswers = () => {
+        let st = this.state;
+        this.answerRightful = st.answer[this.IndexDisplayQuestion];
+        let ranButtonShowAnswerRightful = Math.floor(Math.random() * 9) + 1;
+        this.setState({
+            resultButton1: st.answer[Math.floor(Math.random() * st.answer.length)],
+            resultButton2: st.answer[Math.floor(Math.random() * st.answer.length)],
+            resultButton3: st.answer[Math.floor(Math.random() * st.answer.length)],
+            resultButton4: st.answer[Math.floor(Math.random() * st.answer.length)],
+            resultButton5: st.answer[Math.floor(Math.random() * st.answer.length)],
+            resultButton6: st.answer[Math.floor(Math.random() * st.answer.length)],
+            resultButton7: st.answer[Math.floor(Math.random() * st.answer.length)],
+            resultButton8: st.answer[Math.floor(Math.random() * st.answer.length)],
+            resultButton9: st.answer[Math.floor(Math.random() * st.answer.length)],
+        });
+        switch (ranButtonShowAnswerRightful) {      //ทำให้ในแต่ละรอบมีคำตอบที่ถูกต้องอย่างน้อย 1 เสมอ
+            case 1 : { this.setState({resultButton1: this.answerRightful}) } break;
+            case 2 : { this.setState({resultButton2: this.answerRightful}) } break;
+            case 3 : { this.setState({resultButton3: this.answerRightful}) } break;
+            case 4 : { this.setState({resultButton4: this.answerRightful}) } break;
+            case 5 : { this.setState({resultButton5: this.answerRightful}) } break;
+            case 6 : { this.setState({resultButton6: this.answerRightful}) } break;
+            case 7 : { this.setState({resultButton7: this.answerRightful}) } break;
+            case 8 : { this.setState({resultButton8: this.answerRightful}) } break;
+            case 9 : { this.setState({resultButton9: this.answerRightful}) } break;
+        }
+    };
+
+    _checkAnswer = (ans) => {
+        let { answer, score, hp } = this.state;
+        this.answerRightful = answer[this.IndexDisplayQuestion];
+        if (ans === this.answerRightful) {
+            this.setState({
+                score: score + 10,
+                keyArrayQuestionRandom: this.state.keyArrayQuestionRandom + 1,
+                bgColorRightful: "green"
+            });
+        } else {
+            this.setState({
+                hp: hp - 1,
+                bgColorHp : 'red'
+            });
+        }
+        this._resetBgColor();
+    };
+
+    _resetBgColor = () => {
+        timer.setTimeout(this, 'resetBg', () => {
+            this.setState({
+                bgColorRightful: "transparent",
+                bgColorHp : 'transparent'
+            })
+        },200);
+    };
+
+    _renderOnPressButton = (ans, key) => {
+        this._checkAnswer(ans);
+        this._clearAnswerInButtons(key);
+    };
+
     _clearAnswerInButtons = (key) => {
         switch (key) {
             case 1 : {this.setState({resultButton1: ""})} break;
@@ -230,30 +200,58 @@ export default class gamePlayScreen extends PureComponent {
         }
     };
 
-    _renderOnPressButton = (ans, key) => {
-        this._checkAnswer(ans);
-        this._clearAnswerInButtons(key);
+    _checkTime = (countDown) => {
+        if (countDown === 0) {
+            this._stop();
+        }
+    };
+
+    _hp = (hp) => {
+        if (hp === 0) {
+            this._stop();
+            this.setState({ hp: 10 });
+        }
+    };
+
+    _stop = () => {
+        let { countDown, score, hp } = this.state;
+        timer.clearInterval(this);
+        this._displayPoint(countDown, score, hp);
+        this.setState({
+            disable_button: true,
+            start: false,
+            countDown: 60
+        });
+    };
+
+    _displayPoint = (time, score, hp) => {
+        time = time * 10;
+        let ScoreTotal = (time + score) * hp;
+        this.props.navigation.navigate('GetStartScreen', {ScoreTotal: ScoreTotal});
     };
 
     render() {
         let st = this.state;
-        this._checkTime();
+        this._checkTime(st.countDown);
         this._hp(st.hp);
 
         return (
             <Container style={styles.bgContainer}>
                 <View style={styles.viewHeader}>
                     <View style={[styles.viewHp,{backgroundColor: this.state.bgColorHp}]}>
-                        <Text style={styles.textPoint}>{"Hp: "}</Text>
+                        <Text style={styles.textTitle}>{"Hp: "}</Text>
                         <Text style={styles.textResult}>{st.hp}</Text>
                     </View>
                     <View style={styles.viewCountDownTime}>
-                        <Text style={styles.textPoint}>{"Time out: "}</Text>
+                        <Text style={styles.textTitle}>{"Time out: "}</Text>
                         <Text style={styles.textResult}>{st.countDown}</Text>
                     </View>
                 </View>
                 <View style={styles.viewDisplayQuestion}>
                     {st.displayQuestion ? this._randomQuestion(st.keyArrayQuestionRandom, st.start) : null}
+                </View>
+                <View style={{width: '15%' , marginTop: '1%', left: '85%'}}>
+                    <Text style={styles.textIndex}>{`${st.keyArrayQuestionRandom} / ${st.question.length}`}</Text>
                 </View>
                 <NineButtons
                     title1={st.start ? st.resultButton1 : ""}
@@ -295,8 +293,8 @@ export default class gamePlayScreen extends PureComponent {
                     disable_={st.disable_button}
                 />
                 <View style={[styles.viewScore,{backgroundColor: this.state.bgColorRightful}]}>
-                    <Text style={styles.textPoint}>{"Score: "}</Text>
-                    <Text style={styles.textResult}>{st.sum}</Text>
+                    <Text style={styles.textTitle}>{"Score: "}</Text>
+                    <Text style={styles.textResult}>{st.score}</Text>
                 </View>
             </Container>
         );
@@ -305,6 +303,7 @@ export default class gamePlayScreen extends PureComponent {
 
 const styles = StyleSheet.create({
     bgContainer: {
+        flex: 1,
         backgroundColor: '#ad7a56'
     },
     viewHeader: {
@@ -327,7 +326,7 @@ const styles = StyleSheet.create({
         width: '100%',
         height: '10%',
         alignItems: 'center',
-        marginBottom: 20
+        marginBottom: '1%',
     },
     viewScore: {
         flexDirection: 'row',
@@ -343,7 +342,7 @@ const styles = StyleSheet.create({
         paddingBottom: 5,
         fontWeight: 'bold',
     },
-    textPoint: {
+    textTitle: {
         color: '#502701',
         fontSize: 30,
         fontWeight: 'bold'
@@ -353,4 +352,9 @@ const styles = StyleSheet.create({
         fontSize: 30,
         fontWeight: 'bold'
     },
+    textIndex: {
+        color: '#fff',
+        fontSize: 18,
+        fontWeight: 'bold'
+    }
 });
