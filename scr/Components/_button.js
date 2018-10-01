@@ -7,6 +7,7 @@ const _button = (props) => {
         <TouchableHighlight
             style={styles.touch}
             onPress={props.onPress}
+            disabled={props.disable}
         >
             <Text style={styles.text}>{props.title}</Text>
         </TouchableHighlight>

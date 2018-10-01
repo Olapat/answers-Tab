@@ -1,4 +1,4 @@
-//V.6.2 update delHP when not press btn before chang answers in btn  from V.6.1
+//V.6.2 update score  from V.6.1
 import React, { PureComponent } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { Container } from 'native-base';
@@ -12,15 +12,15 @@ export default class gamePlayScreen extends PureComponent {
         header: null,
     };
 
-    constructor(props) {
-        super(props);
+    constructor() {
+        super();
         this.state = {
             score: 0,
             lv: 3000,
             lv1: 50,
             lv2: 100,
             lv3: 150,
-            hp: 5,
+            hp: 10,
             start: false,
             disable_button: true,
             displayQuestion: false,
@@ -50,6 +50,7 @@ export default class gamePlayScreen extends PureComponent {
     };
 
     componentWillMount() {
+        constructor();
         timer.setTimeout(this, 'delay',
             () => {
                 this._CreateIndexQuestionRandom();
@@ -155,15 +156,15 @@ export default class gamePlayScreen extends PureComponent {
         }
 
         switch (ranButtonShowAnswerRightful) {      //ทำให้ในแต่ละรอบมีคำตอบที่ถูกต้องอย่างน้อย 1 เสมอ
-            case 1 : { this.setState({resultButton1: this.answerRightful}) } break;
-            case 2 : { this.setState({resultButton2: this.answerRightful}) } break;
-            case 3 : { this.setState({resultButton3: this.answerRightful}) } break;
-            case 4 : { this.setState({resultButton4: this.answerRightful}) } break;
-            case 5 : { this.setState({resultButton5: this.answerRightful}) } break;
-            case 6 : { this.setState({resultButton6: this.answerRightful}) } break;
-            case 7 : { this.setState({resultButton7: this.answerRightful}) } break;
-            case 8 : { this.setState({resultButton8: this.answerRightful}) } break;
-            case 9 : { this.setState({resultButton9: this.answerRightful}) } break;
+            case 1 : { this.setState({ resultButton1: this.answerRightful }) } break;
+            case 2 : { this.setState({ resultButton2: this.answerRightful }) } break;
+            case 3 : { this.setState({ resultButton3: this.answerRightful }) } break;
+            case 4 : { this.setState({ resultButton4: this.answerRightful }) } break;
+            case 5 : { this.setState({ resultButton5: this.answerRightful }) } break;
+            case 6 : { this.setState({ resultButton6: this.answerRightful }) } break;
+            case 7 : { this.setState({ resultButton7: this.answerRightful }) } break;
+            case 8 : { this.setState({ resultButton8: this.answerRightful }) } break;
+            case 9 : { this.setState({ resultButton9: this.answerRightful }) } break;
         }
     };
 
@@ -176,6 +177,7 @@ export default class gamePlayScreen extends PureComponent {
                 keyArrayQuestionRandom: this.state.keyArrayQuestionRandom + 1,
                 bgColorRightful: "green"
             });
+            this._intervalAfterOnPress();
         } else {
             this.setState({
                 hp: hp - 1,
@@ -204,36 +206,34 @@ export default class gamePlayScreen extends PureComponent {
 
     _lv = (score, lv1, lv2, lv3) => {
         if (score - lv1 === 0) {
-            this.setState({lv: 2500, lv1: 0});
+            this.setState({ lv: 2500, lv1: 0 });
             return;
         }
         if (score - lv2 === 0) {
-            this.setState({lv: 2000, lv2: 0});
+            this.setState({ lv: 2000, lv2: 0 });
             return;
         }
         if (score - lv3 === 0) {
-            this.setState({lv: 1500, lv3: 0});
+            this.setState({ lv: 1500, lv3: 0 });
         }
     };
 
     _renderOnPressButton = (ans, key) => {
         this._checkAnswer(ans);
         this._clearAnswerInButtons(key);
-        this.setState({R: this.state.R + 1});
-        this._intervalAfterOnPress();
     };
 
     _clearAnswerInButtons = (key) => {
         switch (key) {
-            case 1 : {this.setState({resultButton1: ""})} break;
-            case 2 : {this.setState({resultButton2: ""})} break;
-            case 3 : {this.setState({resultButton3: ""})} break;
-            case 4 : {this.setState({resultButton4: ""})} break;
-            case 5 : {this.setState({resultButton5: ""})} break;
-            case 6 : {this.setState({resultButton6: ""})} break;
-            case 7 : {this.setState({resultButton7: ""})} break;
-            case 8 : {this.setState({resultButton8: ""})} break;
-            case 9 : {this.setState({resultButton9: ""})} break;
+            case 1 : { this.setState({ resultButton1: " " }) } break;
+            case 2 : { this.setState({ resultButton2: " " }) } break;
+            case 3 : { this.setState({ resultButton3: " " }) } break;
+            case 4 : { this.setState({ resultButton4: " " }) } break;
+            case 5 : { this.setState({ resultButton5: " " }) } break;
+            case 6 : { this.setState({ resultButton6: " " }) } break;
+            case 7 : { this.setState({ resultButton7: " " }) } break;
+            case 8 : { this.setState({ resultButton8: " " }) } break;
+            case 9 : { this.setState({ resultButton9: " " }) } break;
         }
     };
 
@@ -246,7 +246,6 @@ export default class gamePlayScreen extends PureComponent {
     _hp = (hp) => {
         if (hp === 0) {
             this._stop();
-            this.setState({ hp: 5 });
         }
     };
 
@@ -257,13 +256,15 @@ export default class gamePlayScreen extends PureComponent {
         this.setState({
             disable_button: true,
             start: false,
-            countDown: 60
+            countDown: 60,
+            hp: 10
         });
     };
 
     _displayPoint = (time, score, hp) => {
-        time = time * 10;
-        let ScoreTotal = (time + score) * hp;
+        time = time * 2;
+        hp = hp * 2;
+        let ScoreTotal = (time * hp) + score;
         this.props.navigation.navigate('GetStartScreen', {ScoreTotal: ScoreTotal});
     };
 
@@ -271,7 +272,7 @@ export default class gamePlayScreen extends PureComponent {
         let st = this.state;
         this._checkTime(st.countDown);
         this._hp(st.hp);
-        st.R === 2 ? timer.clearInterval(this, 'resInButton') : null;
+        st.score === 10 ? timer.clearInterval(this, 'resInButton') : null;
         this._lv(st.score, st.lv1, st.lv2, st.lv3);
 
         return (
