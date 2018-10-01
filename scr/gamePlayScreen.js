@@ -50,7 +50,6 @@ export default class gamePlayScreen extends PureComponent {
     };
 
     componentWillMount() {
-        constructor();
         timer.setTimeout(this, 'delay',
             () => {
                 this._CreateIndexQuestionRandom();
@@ -129,7 +128,7 @@ export default class gamePlayScreen extends PureComponent {
             });
             timer.setInterval(this, 'countDown', () => {  //countDownTime
                 this.setState({
-                    countDown: st.countDown - 1,
+                    countDown: this.state.countDown - 1,
                 });
             }, 1000)
         },st.lv);
