@@ -1,7 +1,7 @@
-//V.6.1 update onPress to chang answers in btn than Interval from V.6
+//V.6.2 update delHP when not press btn before chang answers in btn  from V.6.1
 import React, { PureComponent } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import { Container, Content } from 'native-base';
+import { Container } from 'native-base';
 import NineButtons from './Components/_9_buttons';
 import Questions from './question';
 import Answers from './answers';
@@ -112,10 +112,13 @@ export default class gamePlayScreen extends PureComponent {
 
     _randomAnswerInButton = () => {
         let st = this.state;
+        let r = 0;
         timer.setInterval(      // Random As 9 Button
             this, 'resInButton',
             () => {
                 this._randomAnswers(st.keyArrayQuestionRandom , -1);
+                r === 1 ? this._checkAnswer('false') : null;
+                r = 1
             }, st.lv);
         timer.setTimeout(this, 'delayCountDown', () => {
             this.setState({
@@ -125,7 +128,7 @@ export default class gamePlayScreen extends PureComponent {
             });
             timer.setInterval(this, 'countDown', () => {  //countDownTime
                 this.setState({
-                    countDown: this.state.countDown - 1,
+                    countDown: st.countDown - 1,
                 });
             }, 1000)
         },st.lv);
@@ -195,6 +198,7 @@ export default class gamePlayScreen extends PureComponent {
         let { lv, keyArrayQuestionRandom } = this.state;
         timer.setInterval(this, 'testST', () => {
             this._randomAnswers(keyArrayQuestionRandom , -1);
+            this._checkAnswer('false')
         },lv);
     };
 
@@ -242,7 +246,7 @@ export default class gamePlayScreen extends PureComponent {
     _hp = (hp) => {
         if (hp === 0) {
             this._stop();
-            this.setState({ hp: 10 });
+            this.setState({ hp: 5 });
         }
     };
 
