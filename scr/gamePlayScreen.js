@@ -1,4 +1,4 @@
-//V.6 Update score , fix bug Code , add DisplayIndexQ and edit pattern function
+//V.6.1 update onPress to chang answers in btn than Interval from V.6
 import React, { PureComponent } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { Container, Content } from 'native-base';
@@ -16,7 +16,10 @@ export default class gamePlayScreen extends PureComponent {
         super(props);
         this.state = {
             score: 0,
-            lv: 2000,
+            lv: 3000,
+            lv1: 50,
+            lv2: 100,
+            lv3: 150,
             hp: 5,
             start: false,
             disable_button: true,
@@ -40,7 +43,9 @@ export default class gamePlayScreen extends PureComponent {
             keyArrayQuestionRandom: 0,
             countDown: 60,
             bgColorRightful: "transparent",
-            bgColorHp: "transparent"
+            bgColorHp: "transparent",
+            tempKey: -1,
+            R: 1
         };
     };
 
@@ -50,8 +55,7 @@ export default class gamePlayScreen extends PureComponent {
                 this._CreateIndexQuestionRandom();
                 this._randomQuestion(this.state.keyArrayQuestionRandom, this.state.start);
                 this._randomAnswerInButton();
-            }
-            , 200);
+         }, 200);
     };
 
     componentWillUnmount() {
@@ -93,7 +97,7 @@ export default class gamePlayScreen extends PureComponent {
     };
 
     _randomQuestion = (keyArrayQuestionRandom, start) => {
-        let { IndexRandomStateQuestion, question } = this.state;
+        let { IndexRandomStateQuestion, question, tempKey } = this.state;
         this.IndexDisplayQuestion = IndexRandomStateQuestion[keyArrayQuestionRandom];
         let QuestionDisplay = question[this.IndexDisplayQuestion];
         let fontSize = 36;
@@ -102,6 +106,7 @@ export default class gamePlayScreen extends PureComponent {
         }else if (QuestionDisplay) {
             fontSize = QuestionDisplay.length > 20 ? 30 : 36;
         }
+        this._randomAnswers(keyArrayQuestionRandom, tempKey);
         return <Text style={[styles.textQuestion, {fontSize: fontSize}]}>{start ? QuestionDisplay : " "}</Text>
     };
 
@@ -110,7 +115,7 @@ export default class gamePlayScreen extends PureComponent {
         timer.setInterval(      // Random As 9 Button
             this, 'resInButton',
             () => {
-                this._randomAnswers();
+                this._randomAnswers(st.keyArrayQuestionRandom , -1);
             }, st.lv);
         timer.setTimeout(this, 'delayCountDown', () => {
             this.setState({
@@ -126,21 +131,26 @@ export default class gamePlayScreen extends PureComponent {
         },st.lv);
     };
 
-    _randomAnswers = () => {
+    _randomAnswers = (keyArrayQuestionRandom, tempKey) => {
         let st = this.state;
+        let ranButtonShowAnswerRightful;
         this.answerRightful = st.answer[this.IndexDisplayQuestion];
-        let ranButtonShowAnswerRightful = Math.floor(Math.random() * 9) + 1;
-        this.setState({
-            resultButton1: st.answer[Math.floor(Math.random() * st.answer.length)],
-            resultButton2: st.answer[Math.floor(Math.random() * st.answer.length)],
-            resultButton3: st.answer[Math.floor(Math.random() * st.answer.length)],
-            resultButton4: st.answer[Math.floor(Math.random() * st.answer.length)],
-            resultButton5: st.answer[Math.floor(Math.random() * st.answer.length)],
-            resultButton6: st.answer[Math.floor(Math.random() * st.answer.length)],
-            resultButton7: st.answer[Math.floor(Math.random() * st.answer.length)],
-            resultButton8: st.answer[Math.floor(Math.random() * st.answer.length)],
-            resultButton9: st.answer[Math.floor(Math.random() * st.answer.length)],
-        });
+        if (tempKey === -1 ||keyArrayQuestionRandom === tempKey + 1) {
+            this.setState({tempKey: keyArrayQuestionRandom});
+            ranButtonShowAnswerRightful = Math.floor(Math.random() * 9) + 1;
+            this.setState({
+                resultButton1: st.answer[Math.floor(Math.random() * st.answer.length)],
+                resultButton2: st.answer[Math.floor(Math.random() * st.answer.length)],
+                resultButton3: st.answer[Math.floor(Math.random() * st.answer.length)],
+                resultButton4: st.answer[Math.floor(Math.random() * st.answer.length)],
+                resultButton5: st.answer[Math.floor(Math.random() * st.answer.length)],
+                resultButton6: st.answer[Math.floor(Math.random() * st.answer.length)],
+                resultButton7: st.answer[Math.floor(Math.random() * st.answer.length)],
+                resultButton8: st.answer[Math.floor(Math.random() * st.answer.length)],
+                resultButton9: st.answer[Math.floor(Math.random() * st.answer.length)],
+            });
+        }
+
         switch (ranButtonShowAnswerRightful) {      //ทำให้ในแต่ละรอบมีคำตอบที่ถูกต้องอย่างน้อย 1 เสมอ
             case 1 : { this.setState({resultButton1: this.answerRightful}) } break;
             case 2 : { this.setState({resultButton2: this.answerRightful}) } break;
@@ -181,9 +191,32 @@ export default class gamePlayScreen extends PureComponent {
         },200);
     };
 
+    _intervalAfterOnPress = () => {
+        let { lv, keyArrayQuestionRandom } = this.state;
+        timer.setInterval(this, 'testST', () => {
+            this._randomAnswers(keyArrayQuestionRandom , -1);
+        },lv);
+    };
+
+    _lv = (score, lv1, lv2, lv3) => {
+        if (score - lv1 === 0) {
+            this.setState({lv: 2500, lv1: 0});
+            return;
+        }
+        if (score - lv2 === 0) {
+            this.setState({lv: 2000, lv2: 0});
+            return;
+        }
+        if (score - lv3 === 0) {
+            this.setState({lv: 1500, lv3: 0});
+        }
+    };
+
     _renderOnPressButton = (ans, key) => {
         this._checkAnswer(ans);
         this._clearAnswerInButtons(key);
+        this.setState({R: this.state.R + 1});
+        this._intervalAfterOnPress();
     };
 
     _clearAnswerInButtons = (key) => {
@@ -234,6 +267,8 @@ export default class gamePlayScreen extends PureComponent {
         let st = this.state;
         this._checkTime(st.countDown);
         this._hp(st.hp);
+        st.R === 2 ? timer.clearInterval(this, 'resInButton') : null;
+        this._lv(st.score, st.lv1, st.lv2, st.lv3);
 
         return (
             <Container style={styles.bgContainer}>
