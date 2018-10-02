@@ -89,12 +89,10 @@ export default class homeScreen extends PureComponent {
                         onPress={this._onOpenModal}
                         underlayColor={'#813101'}
                     >
-                        <View>
-                            <View style={[styles.viewDataScoreT,{marginTop: '5%'}]}>
-                                <Text style={styles.text}>{`ScoreTotal:`}</Text>
-                                {/*<Text style={styles.text}>{`140`}</Text>*/}
-                                <Text style={styles.text}>{newDataScore.ScoreTotal}</Text>
-                            </View>
+                        <View style={[styles.viewDataScoreT,{marginTop: '5%'}]}>
+                            <Text style={styles.text}>{`ScoreTotal:`}</Text>
+                            {/*<Text style={styles.text}>{`140`}</Text>*/}
+                            <Text style={styles.text}>{newDataScore.ScoreTotal}</Text>
                         </View>
                     </TouchableHighlight>
                     : null
