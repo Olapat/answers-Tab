@@ -261,9 +261,9 @@ export default class gamePlayScreen extends PureComponent {
     };
 
     _displayPoint = (time, score, hp) => {
-        let timex2 = time * 2;
-        let hpx2 = hp * 2;
-        let ScoreTotal = (timex2 * hpx2) + score;
+        let timex5 = time * 5;
+        let hpx10 = hp * 100;
+        let ScoreTotal = ((time * hp) + 1) * score;
         this.props.navigation.navigate('GetStartScreen', {
             DataScore: {
                 ScoreTotal: ScoreTotal,

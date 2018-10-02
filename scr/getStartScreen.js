@@ -43,7 +43,7 @@ export default class homeScreen extends PureComponent {
                 >
                     <View style={[styles.viewScoreTotal,{alignSelf: 'center', marginTop: '2%'}]}>
                         <View style={styles.viewDataScore}>
-                            <Text style={styles.texts}>{`Score: `}</Text>
+                            <Text style={styles.texts}>{`Questions: `}</Text>
                             {/*<Text style={styles.texts}>{"140"}</Text>*/}
                             <Text style={styles.texts}>{newDataScore.Score}</Text>
                         </View>
@@ -58,7 +58,7 @@ export default class homeScreen extends PureComponent {
                             {/*<Text style={styles.texts}>{'6'}</Text>*/}
                         </View>
                         <View style={[styles.viewDataScore,{marginTop: '5%'}]}>
-                            <Text style={styles.text}>{`ScoreTotal:`}</Text>
+                            <Text style={styles.text}>{`Score:`}</Text>
                             {/*<Text style={styles.text}>{`140`}</Text>*/}
                             <Text style={styles.text}>{newDataScore.ScoreTotal}</Text>
                         </View>
@@ -89,12 +89,10 @@ export default class homeScreen extends PureComponent {
                         onPress={this._onOpenModal}
                         underlayColor={'#813101'}
                     >
-                        <View>
-                            <View style={[styles.viewDataScoreT,{marginTop: '5%'}]}>
-                                <Text style={styles.text}>{`ScoreTotal:`}</Text>
-                                {/*<Text style={styles.text}>{`140`}</Text>*/}
-                                <Text style={styles.text}>{newDataScore.ScoreTotal}</Text>
-                            </View>
+                        <View style={[styles.viewDataScoreT,{marginTop: '5%'}]}>
+                            <Text style={styles.text}>{`Score:`}</Text>
+                            {/*<Text style={styles.text}>{`140`}</Text>*/}
+                            <Text style={styles.text}>{newDataScore.ScoreTotal}</Text>
                         </View>
                     </TouchableHighlight>
                     : null
